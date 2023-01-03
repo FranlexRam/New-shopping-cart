@@ -1,82 +1,170 @@
+// Array de productos
 const stockProductos = [
   {
     id: 1,
-    nombre: "Crash Bandicoot",
+    nombre: "Letter Graphic Sweatshirt",
     cantidad: 1,
     desc: "Juego plataformero, niveles dificiles",
-    precio: 1200,
-    img: "img/Crash.jpg",
+    precio: 13.00,
+    img: "imgFRAN/producto1.jpg",
   },
   {
     id: 2,
-    nombre: "Mortal Kombat X",
+    nombre: "Ripped Frayed Flap Pocket",
     cantidad: 1,
     desc: "Luchas con los mejores graficos",
-    precio: 1500,
-    img: "img/mortal.jpg",
+    precio: 40.00,
+    img: "imgFRAN/producto2.jpg",
   },
   {
     id: 3,
-    nombre: "Pac Man",
+    nombre: "Single Button Blazer",
     cantidad: 1,
     desc: "Juego plataformero, niveles basicos",
-    precio: 1570,
-    img: "img/pacman.jpg",
+    precio: 61.00,
+    img: "imgFRAN/producto3.jpg",
   },
   {
     id: 4,
-    nombre: "Dragon Ball Xenoverse",
+    nombre: "Letter Embroidery",
     cantidad: 1,
     desc: "Vive la experiencia dragon ball",
-    precio: 1000,
-    img: "img/dragonball.jpg",
+    precio: 19.00,
+    img: "imgFRAN/producto4.jpg",
   },
   {
     id: 5,
-    nombre: "Naruto Ninja Storm 4",
+    nombre: "Letter Graphic Flap Pocket",
     cantidad: 1,
     desc: "La historia de Naruto",
-    precio: 1200,
-    img: "img/naruto.jpg",
+    precio: 24.00,
+    img: "imgFRAN/producto5.jpg",
   },
   {
     id: 6,
-    nombre: "Shingeki Final Attack",
+    nombre: "Zip Up PU Moto Jacket",
     cantidad: 1,
     desc: "Eren Jeager vuelve en formato gamer...",
-    precio: 1200,
-    img: "img/shingeki.jpg",
+    precio: 43.00,
+    img: "imgFRAN/producto6.jpg",
   },
   {
     id: 7,
-    nombre: "League of Legends",
+    nombre: "Patch Detail Sweater",
     cantidad: 1,
     desc: "No compres esto por tu bien",
-    precio: 1400,
-    img: "img/league.jpg",
+    precio: 20.00,
+    img: "imgFRAN/producto7.jpg",
   },
   {
     id: 8,
-    nombre: "Call Of Duty Warzone",
+    nombre: "Slant Pocket Drawstring",
     cantidad: 1,
     desc: "Dispara como nunca",
-    precio: 1200,
-    img: "img/callduty.jpg",
+    precio: 22.00,
+    img: "imgFRAN/producto8.jpg",
   },
   {
     id: 9,
-    nombre: "Fifa 2019",
+    nombre: "Slant Pocket Skinny Jeans",
     cantidad: 1,
     desc: "Juego de futbol",
-    precio: 1400,
-    img: "img/fifa.jpg",
+    precio: 32.00,
+    img: "imgFRAN/producto9.jpg",
   },
   {
     id: 10,
-    nombre: "Fornite",
+    nombre: "Contrast Trim Polo Shirt",
     cantidad: 1,
     desc: "Battle Royale",
-    precio: 1200,
-    img: "img/fornite.jpg",
+    precio: 31.00,
+    img: "imgFRAN/producto10.jpg",
   },
 ];
+
+let carrito = [];
+
+// Selectores
+const contenedor = document.querySelector('#contenedor');
+const carritoContenedor = document.querySelector('#carritoContenedor'); //Contador de productos en el carrito
+const vaciarCarrito = document.querySelector('#vaciarCarrito');
+
+//Almacenando productos en localStorage
+document.addEventListener('DOMContentLoaded', () => {
+  carrito = JSON.parse(localStorage.getItem('carrito')) || []
+  mostrarCarrito();
+});
+
+stockProductos.forEach((prod) => {
+  const {id, nombre, precio, desc, img, cantidad} = prod //Hacemos destructuracion
+  contenedor.innerHTML += `
+  <div class="card" style="width: 18rem;">
+  <img class="card-img-top mt-2" src="${img}" alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title">${nombre}</h5>
+      <p class="card-text">Price: $${precio}</p>
+      <p class="card-text">Description: ${desc}</p>
+      <p class="card-text">Quantity: ${cantidad}</p>
+      <button onclick="agregarProducto(${id})" class="btn btn-primary">Add to cart</button>
+    </div>
+  </div>  
+  `
+});
+
+vaciarCarrito.addEventListener('click', () => {
+  carrito.length = [];
+  mostrarCarrito();
+});
+
+function agregarProducto(id) {
+  const item = stockProductos.find((prod) => prod.id === id);
+  carrito.push(item);
+  mostrarCarrito();
+}
+
+const mostrarCarrito = () => {
+  const modalBody = document.querySelector('.modal .modal-body');
+  
+  modalBody.innerHTML = ''
+  carrito.forEach((prod) => {
+    const {id, nombre, precio, desc, img, cantidad} = prod //Hacemos destructuracion
+    modalBody.innerHTML += `
+    <div class="modal-contenedor">
+      <div>
+        <img class="img-fluid img-carrito" src="${img}"/> 
+      </div>
+
+      <div>
+        <p><b>Product:</b> ${nombre}</p>
+        <p><b>Price:</b> ${precio}</p>
+        <p><b>Quantity:</b> ${cantidad}</p>
+
+        <button onclick="eliminarProducto(${id})" class="btn btn-danger">Remove product</button>
+      </div>
+    </div>
+    `
+  });
+
+  if (carrito.length === 0) {
+    modalBody.innerHTML = `
+    <p class="text-center text-primary parrafo">You haven't added anything yet!</p>
+    `
+  } else {
+    console.log('Aqui si hay algo jeje');
+  }
+
+  // Contador de productos en el carrito
+  carritoContenedor.textContent = carrito.length;
+
+  guardarStorage();
+}
+
+function eliminarProducto(id) {
+  const productoId = id;
+  carrito = carrito.filter((producto) => producto.id !== productoId);
+  mostrarCarrito();
+}
+
+function guardarStorage() {
+  localStorage.setItem("carrito", JSON.stringify(carrito));
+}
