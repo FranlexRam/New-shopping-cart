@@ -1,3 +1,24 @@
+*,
+::before,
+::after {
+  box-sizing: border-box;
+  border-width: 0;
+}
+
+body, h1, p, ul, h5 {
+    margin: 0;
+}
+
+.table td {
+    border: 0.5px solid black;
+    text-align: center;
+}
+
+/* .th {
+    border: 0.5px solid black;
+    text-align: center;
+} */
+
 a {
     cursor: pointer;
 }
@@ -10,6 +31,10 @@ body {
     display: flex;
     align-items: center;
     gap: 2rem;
+}
+
+.modal-footer {
+    justify-content: center;
 }
 
 .img-carrito {

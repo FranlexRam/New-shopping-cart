@@ -89,33 +89,68 @@ const contenedor = document.querySelector('#contenedor');
 const carritoContenedor = document.querySelector('#carritoContenedor'); //Contador de productos en el carrito
 const vaciarCarrito = document.querySelector('#vaciarCarrito');
 const precioTotal = document.querySelector('#precioTotal');
+const procesarCompra = document.querySelector('#procesarCompra');
+const activarFuncion = document.querySelector('#activarFuncion');
+
+if (activarFuncion) {
+  activarFuncion.addEventListener('click', procesarPedido); 
+}
 
 //Almacenando productos en localStorage
 document.addEventListener('DOMContentLoaded', () => {
-  carrito = JSON.parse(localStorage.getItem('carrito')) || []
+  carrito = JSON.parse(localStorage.getItem('carrito')) || [];
   mostrarCarrito();
+
+  if (activarFuncion) {
+    document.querySelector('#activarFuncion').click(procesarCompra);    
+  }
+
+
 });
 
-stockProductos.forEach((prod) => {
-  const {id, nombre, precio, desc, img, cantidad} = prod //Hacemos destructuracion
-  contenedor.innerHTML += `
-  <div class="card" style="width: 18rem;">
-  <img class="card-img-top mt-2" src="${img}" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title">${nombre}</h5>
-      <p class="card-text">Price: $${precio}</p>
-      <p class="card-text">Description: ${desc}</p>
-      <p class="card-text">Quantity: ${cantidad}</p>
-      <button onclick="agregarProducto(${id})" class="btn btn-primary">Add to cart</button>
-    </div>
-  </div>  
-  `
-});
+if (contenedor) {
+  stockProductos.forEach((prod) => {
+    const {id, nombre, precio, desc, img, cantidad} = prod //Hacemos desestructuracion
+    contenedor.innerHTML += `
+    <div class="card" style="width: 18rem;">
+    <img class="card-img-top mt-2" src="${img}" alt="Card image cap">
+      <div class="card-body">
+        <h5 class="card-title">${nombre}</h5>
+        <p class="card-text">Price: $${precio}</p>
+        <p class="card-text">Description: ${desc}</p>
+        <p class="card-text">Quantity: ${cantidad}</p>
+        <button onclick="agregarProducto(${id})" class="btn btn-primary">Add to cart</button>
+      </div>
+    </div>  
+    `
+  });
+  
+}
 
-vaciarCarrito.addEventListener('click', () => {
-  carrito.length = [];
-  mostrarCarrito();
-});
+
+if (procesarCompra) {
+  procesarCompra.addEventListener('click', () => {
+    if (carrito.length === 0) {
+      Swal.fire({
+        title: "Your cart is empty!",
+        text: "Please, add some product to your cart to continue payment.",
+        icon: "error",
+        confirmButtonText: "Accept",
+      })
+    } else {
+      location.href = "compra.html"
+      procesarPedido();
+    }
+  });  
+}
+
+
+if (vaciarCarrito) {
+  vaciarCarrito.addEventListener('click', () => {
+    carrito.length = [];
+    mostrarCarrito();
+  });  
+}
 
 function agregarProducto(id) {
 
@@ -138,25 +173,27 @@ function agregarProducto(id) {
 const mostrarCarrito = () => {
   const modalBody = document.querySelector('.modal .modal-body');
   
-  modalBody.innerHTML = ''
-  carrito.forEach((prod) => {
-    const {id, nombre, precio, desc, img, cantidad} = prod //Hacemos destructuracion
-    modalBody.innerHTML += `
-    <div class="modal-contenedor">
-      <div>
-        <img class="img-fluid img-carrito" src="${img}"/> 
+  if (modalBody) {
+    modalBody.innerHTML = ''
+    carrito.forEach((prod) => {
+      const {id, nombre, precio, desc, img, cantidad} = prod //Hacemos desestructuracion
+      modalBody.innerHTML += `
+      <div class="modal-contenedor">
+        <div>
+          <img class="img-fluid img-carrito" src="${img}"/> 
+        </div>
+  
+        <div>
+          <p><b>Product:</b> ${nombre}</p>
+          <p><b>Price:</b> $${precio}</p>
+          <p><b>Quantity:</b> ${cantidad}</p>
+  
+          <button onclick="eliminarProducto(${id})" class="btn btn-danger">Remove product</button>
+        </div>
       </div>
-
-      <div>
-        <p><b>Product:</b> ${nombre}</p>
-        <p><b>Price:</b> ${precio}</p>
-        <p><b>Quantity:</b> ${cantidad}</p>
-
-        <button onclick="eliminarProducto(${id})" class="btn btn-danger">Remove product</button>
-      </div>
-    </div>
-    `
-  });
+      `
+    });    
+  }
 
   if (carrito.length === 0) {
     modalBody.innerHTML = `
@@ -168,7 +205,9 @@ const mostrarCarrito = () => {
   carritoContenedor.textContent = carrito.length;
 
   //Precio total dentro del carrito
-  precioTotal.innerText = carrito.reduce((acc, prod) => acc + prod.cantidad * prod.precio, 0);
+  if (precioTotal) {
+    precioTotal.innerText = carrito.reduce((acc, prod) => acc + prod.cantidad * prod.precio, 0);
+  }
 
   guardarStorage();
 }
@@ -181,4 +220,26 @@ function eliminarProducto(id) {
 
 function guardarStorage() {
   localStorage.setItem("carrito", JSON.stringify(carrito));
+}
+
+function procesarPedido() {
+  
+  carrito.forEach((prod) => {
+    const listaCompra = document.querySelector('#lista-compra tbody');
+    const {id, nombre, precio, desc, img, cantidad} = prod //Hacemos desestructuracion
+
+    const row = document.createElement('tr');
+    row.innerHTML += `
+    <td>
+      <img class="img-carrito" src="${img}"/>
+    </td>
+    <td>${nombre}</td>
+    <td>$${precio}</td>
+    <td>${cantidad}</td>
+    <td>${precio * cantidad}</td>
+    
+    `
+    listaCompra.appendChild(row);
+  });
+
 }
