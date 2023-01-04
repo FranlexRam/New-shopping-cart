@@ -10,14 +10,32 @@ body, h1, p, ul, h5 {
 }
 
 .table td {
-    border: 0.5px solid black;
     text-align: center;
+    vertical-align: middle;
 }
 
-/* .th {
-    border: 0.5px solid black;
+
+
+th {
     text-align: center;
-} */
+    vertical-align: middle;
+}
+
+.text-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar-index {
+    position: fixed;
+    top: 0;
+    z-index: 400;
+}
+
+main {
+    margin-top: 97px;
+}
 
 a {
     cursor: pointer;
@@ -51,4 +69,8 @@ body {
 .parrafo {
     font-weight: 700;
     font-style: italic;
+}
+
+#activarFuncion {
+    opacity: 0;
 }

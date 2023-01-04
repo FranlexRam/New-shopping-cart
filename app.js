@@ -91,9 +91,15 @@ const vaciarCarrito = document.querySelector('#vaciarCarrito');
 const precioTotal = document.querySelector('#precioTotal');
 const procesarCompra = document.querySelector('#procesarCompra');
 const activarFuncion = document.querySelector('#activarFuncion');
+const totalProceso = document.querySelector('#totalProceso');
+const formulario = document.querySelector('#procesar-pago');
 
 if (activarFuncion) {
   activarFuncion.addEventListener('click', procesarPedido); 
+}
+
+if (formulario) {
+  formulario.addEventListener('submit', enviarPedido);  
 }
 
 //Almacenando productos en localStorage
@@ -236,10 +242,31 @@ function procesarPedido() {
     <td>${nombre}</td>
     <td>$${precio}</td>
     <td>${cantidad}</td>
-    <td>${precio * cantidad}</td>
+    <td>$${precio * cantidad}</td>
     
     `
     listaCompra.appendChild(row);
   });
+
+  totalProceso.innerText = carrito.reduce((acc, prod) => acc + prod.cantidad * prod.precio, 0);
+}
+
+
+function enviarPedido(e) {
+  e.preventDefault();
+  const cliente = document.querySelector('#cliente').value;
+  const correo = document.querySelector('#correo').value;
+
+  if (cliente === '' || correo === '') {
+    swal.fire({
+      title: "You have to put your name and e-mail to make the payment",
+      text: "Please, fill the form out.",
+      icon: "error",
+      confirmButtonText: "Accept",
+    });
+    
+  } else {
+    console.log('Hiciste el pago');
+  }
 
 }
