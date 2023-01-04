@@ -14,7 +14,32 @@ body, h1, p, ul, h5 {
     vertical-align: middle;
 }
 
+.row {
+    display: flex;
+    justify-content: center;
+    column-gap: 13px;
+    row-gap: 13px;
+}
 
+.card {
+    gap: 10px;
+}
+
+.card-title {
+    max-width: 227px;
+    min-width: 240px;
+}
+
+.card-body {
+    display: grid;
+    row-gap: 10px;
+}
+
+.card-img-top {
+    max-height: 320px;
+    min-height: 320px;
+    width: 260px;
+}
 
 th {
     text-align: center;
@@ -42,7 +67,8 @@ th {
 }
 
 main {
-    margin-top: 97px;
+    margin-top: 64px;
+    overflow: hidden;
 }
 
 a {

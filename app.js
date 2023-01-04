@@ -122,9 +122,9 @@ if (contenedor) {
     <img class="card-img-top mt-2" src="${img}" alt="Card image cap">
       <div class="card-body">
         <h5 class="card-title">${nombre}</h5>
-        <p class="card-text">Price: $${precio}</p>
-        <p class="card-text">Description: ${desc}</p>
-        <p class="card-text">Quantity: ${cantidad}</p>
+        <p class="card-text"><b>Price:</b> $${precio}</p>
+        <p class="card-text"><b>Description:</b> ${desc}</p>
+        <p class="card-text"><b>Quantity:</b> ${cantidad}</p>
         <button onclick="agregarProducto(${id})" class="btn btn-primary">Add to cart</button>
       </div>
     </div>  
