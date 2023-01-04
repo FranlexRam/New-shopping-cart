@@ -88,6 +88,7 @@ let carrito = [];
 const contenedor = document.querySelector('#contenedor');
 const carritoContenedor = document.querySelector('#carritoContenedor'); //Contador de productos en el carrito
 const vaciarCarrito = document.querySelector('#vaciarCarrito');
+const precioTotal = document.querySelector('#precioTotal');
 
 //Almacenando productos en localStorage
 document.addEventListener('DOMContentLoaded', () => {
@@ -117,8 +118,20 @@ vaciarCarrito.addEventListener('click', () => {
 });
 
 function agregarProducto(id) {
-  const item = stockProductos.find((prod) => prod.id === id);
-  carrito.push(item);
+
+  const existe = carrito.some(prod => prod.id === id);
+
+  if (existe) {
+    const prod = carrito.map(prod => {
+      if (prod.id === id) {
+        prod.cantidad++;
+      }
+    });
+  } else {
+    const item = stockProductos.find((prod) => prod.id === id);
+    carrito.push(item);
+  }
+
   mostrarCarrito();
 }
 
@@ -149,12 +162,13 @@ const mostrarCarrito = () => {
     modalBody.innerHTML = `
     <p class="text-center text-primary parrafo">You haven't added anything yet!</p>
     `
-  } else {
-    console.log('Aqui si hay algo jeje');
   }
 
   // Contador de productos en el carrito
   carritoContenedor.textContent = carrito.length;
+
+  //Precio total dentro del carrito
+  precioTotal.innerText = carrito.reduce((acc, prod) => acc + prod.cantidad * prod.precio, 0);
 
   guardarStorage();
 }
