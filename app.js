@@ -251,22 +251,62 @@ function procesarPedido() {
   totalProceso.innerText = carrito.reduce((acc, prod) => acc + prod.cantidad * prod.precio, 0);
 }
 
-
 function enviarPedido(e) {
-  e.preventDefault();
-  const cliente = document.querySelector('#cliente').value;
-  const correo = document.querySelector('#correo').value;
+e.preventDefault();
+const persona = document.querySelector('#persona').value;
+const correo = document.querySelector('#correo').value;
 
-  if (cliente === '' || correo === '') {
-    swal.fire({
-      title: "You have to put your name and e-mail to make the payment",
-      text: "Please, fill the form out.",
-      icon: "error",
-      confirmButtonText: "Accept",
-    });
-    
-  } else {
-    console.log('Hiciste el pago');
-  }
+if (persona === '' || correo === '') {
+  swal.fire({
+    title: "You have to put your name and e-mail to make the payment",
+    text: "Please, fill the form out.",
+    icon: "error",
+    confirmButtonText: "Accept",
+  });
+  
+} else {
 
+  const btn = document.getElementById('button');
+
+    // document.getElementById('form').addEventListener('submit', function (event) {
+    //   event.preventDefault();
+
+      btn.value = 'Sending...';
+
+      const serviceID = 'default_service';
+      const templateID = 'template_kbtkjgl';
+
+      emailjs.sendForm(serviceID, templateID, this)
+        .then(() => {
+          btn.value = 'Make the payment';
+          alert('Sent!');
+        }, (err) => {
+          btn.value = 'Make the payment';
+          alert(JSON.stringify(err));
+        });
+    }
+
+
+
+
+  const spinner = document.querySelector('#spinner');
+  spinner.classList.add('d-flex');
+  spinner.classList.remove('d-none');
+
+  setTimeout(() =>{
+    spinner.classList.remove('d-flex');
+    spinner.classList.add('d-none');
+    formulario.reset()
+  }, 2000);
+
+  const alertExito = document.createElement('p');
+  alertExito.classList.add('alert', 'alerta', 'd-block', 'text-center', 'col-md-12', 'mt-2', 'alert-success');
+  alertExito.textContent = "Purchase made correctly.";
+  formulario.appendChild(alertExito);
+
+  setTimeout(() =>{
+    alertExito.remove()
+  }, 3000);
+
+  localStorage.clear();
 }
